@@ -240,6 +240,24 @@ Parse.Simple.Creole = function(options) {
         underline: makeDubleSymbolRule('u', '_'),
         strike: makeDubleSymbolRule('strike', '-'),
         strong: makeDubleSymbolRule('strong', '\\*'),
+        // $x$
+        // inlineMath1: { tag: 'span', capture: 1, attrs: { 'class': 'math' },
+        //    regex: '\\$[ \t]*([^\\$]*[^\\$ \t])[ \t]*\\$'},
+        // \(y\)
+        inlineMath2: { tag: 'span', capture: 1, attrs: { 'class': 'math' },
+            regex: '\\\\\\\([ \t]*(.*?[^ \t])[ \t]*\\\\\\\)'},
+        // $$z$$ 
+        // displayMath1: { tag: 'div', capture: 1, attrs: { 'class': 'math' },
+        //    regex: '\\$\\$[ \t]*(.*?[^ \t])[ \t]*\\$\\$'},
+        // \[z\]
+        displayMath2: { tag: 'div', capture: 1, attrs: { 'class': 'math' },
+            regex: '\\\\\\\[[ \t]*(.*?[^ \t])[ \t]*\\\\\\\]'},
+        // \begin{equation} z \end{equation}
+        displayMath3: { tag: 'div', capture: 1, attrs: { 'class': 'math' },
+            regex: '\\\\begin\\{equation\\}[ \t]*(.*?[^ \t])[ \t]*\\\\end\\{equation\\}'},
+        // \begin{eqnarray} z \end{eqnarray}
+        displayMath4: { tag: 'div', capture: 1, attrs: { 'class': 'math' },
+            regex: '\\\\begin\\{eqnarray\\}[ \t]*(.*?[^ \t])[ \t]*\\\\end\\{eqnarray\\}'},
 
         em: { tag: 'em', capture: 1,
             regex: '\\/\\/(((?!' + rx.uriPrefix + ')[^\\/~])*' +
@@ -351,18 +369,7 @@ Parse.Simple.Creole = function(options) {
     g.td.children = [ g.singleLine ];
     g.th.children = [ g.singleLine ];
 
-    g.h1.children = g.h2.children = g.h3.children =
-            g.h4.children = g.h5.children = g.h6.children =
-            g.singleLine.children = g.paragraph.children =
-            g.text.children =
-            g.monospace.children =
-            g.superscript.children =
-            g.subscript.children =
-            g.underline.children =
-            g.strike.children =
-            g.strong.children =
-            g.em.children =
-        [ g.escapedSequence, g.mdash,
+    var leaf_grammars_without_math = [ g.escapedSequence, g.mdash,
             g.monospace,
             g.superscript,
             g.subscript,
@@ -374,6 +381,28 @@ Parse.Simple.Creole = function(options) {
             g.namedUri, g.namedInterwikiLink, g.namedLink,
             g.unnamedUri, g.unnamedInterwikiLink, g.unnamedLink,
             g.tt, g.img ];
+
+    var leaf_grammars_with_math = [
+            // g.inlineMath1,
+            g.inlineMath2,
+            // g.displayMath1,
+            g.displayMath2,
+            g.displayMath3,
+            g.displayMath4,
+    ].concat(leaf_grammars_without_math);
+
+    g.h1.children = g.h2.children = g.h3.children =
+            g.h4.children = g.h5.children = g.h6.children =
+            g.singleLine.children = g.paragraph.children =
+            g.text.children = leaf_grammars_with_math;
+
+    g.monospace.children =
+            g.superscript.children =
+            g.subscript.children =
+            g.underline.children =
+            g.strike.children =
+            g.strong.children =
+            g.em.children = leaf_grammars_without_math;
 
     g.root = {
         children: [ g.h1, g.h2, g.h3, g.h4, g.h5, g.h6,

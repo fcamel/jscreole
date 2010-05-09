@@ -376,6 +376,112 @@ var tests = [
     input:  "** Strong *",
     output: "<p><strong> Strong *</strong></p>"
   },
+  /*
+  {
+    name:   "inlineMath1",
+    input:  "$x$",
+    output: '<p><span class="math">x</span></p>'
+  },
+  {
+    name:   "inlineMath1 with space",
+    input:  "$ x $",
+    output: '<p><span class="math">x</span></p>'
+  },
+  {
+    name:   "inlineMath1 two in one line",
+    input:  "$ x $ $ y $",
+    output: '<p><span class="math">x</span> <span class="math">y</span></p>'
+  },
+  */
+  {
+    name:   "inlineMath2",
+    input:  "\\(x\\pm y\\)",
+    output: '<p><span class="math">x\\pm y</span></p>'
+  },
+  {
+    name:   "inlineMath2 with space",
+    input:  "\\( x \\)",
+    output: '<p><span class="math">x</span></p>'
+  },
+  {
+    name:   "inlineMath2 two in one line",
+    input:  "\\( x \\) \\( y \\)",
+    output: '<p><span class="math">x</span> <span class="math">y</span></p>'
+  },
+  /*
+  {
+    name:   "displayMath1",
+    input:  "$$\\int_a^b \\sin x = -(\\cos b - \\cos a)$$",
+    output: '<p><div class="math>\\int_a^b \\sin x = -(\\cos b - \\cos a)</div>',
+  },
+  {
+    name:   "displayMath1 with space",
+    input:  "$$ x $$",
+    output: '<p><div class="math">x</div></p>'
+  },
+  {
+    name:   "displayMath1 two in one line",
+    input:  "$$ x $$ abc $$ y $$",
+    output: '<p><div class="math">x</div> abc <div class="math">y</div></p>'
+  },
+  */
+  {
+    name:   "displayMath2",
+    input:  "\\[\\int_a^b \\sin x = -(\\cos b - \\cos a)\\]",
+    output: '<p><div class="math>\\int_a^b \\sin x = -(\\cos b - \\cos a)</div>',
+  },
+  {
+    name:   "displayMath2 with space",
+    input:  "\\[ x \\]",
+    output: '<p><div class="math">x</div></p>'
+  },
+  {
+    name:   "displayMath2 two in one line",
+    input:  "\\[ x \\] abc \\[ y \\]",
+    output: '<p><div class="math">x</div> abc <div class="math">y</div></p>'
+  },
+  {
+    name:   "displayMath3",
+    input:  "\\begin{equation}\\int_a^b \\sin x = -(\\cos b - \\cos a)\\end{equation}",
+    output: '<p><div class="math>\\int_a^b \\sin x = -(\\cos b - \\cos a)</div>',
+  },
+  {
+    name:   "displayMath3 with space",
+    input:  "\\begin{equation} x \\end{equation}",
+    output: '<p><div class="math">x</div></p>'
+  },
+  {
+    name:   "displayMath3 two in one line",
+    input:  "\\begin{equation} x \\end{equation} abc \\begin{equation} y \\end{equation}",
+    output: '<p><div class="math">x</div> abc <div class="math">y</div></p>'
+  },
+  {
+    name:   "displayMath4",
+    input:  "\\begin{eqnarray}\\int_a^b \\sin x = -(\\cos b - \\cos a)\\end{eqnarray}",
+    output: '<p><div class="math>\\int_a^b \\sin x = -(\\cos b - \\cos a)</div>',
+  },
+  {
+    name:   "displayMath4 with space",
+    input:  "\\begin{eqnarray} x \\end{eqnarray}",
+    output: '<p><div class="math">x</div></p>'
+  },
+  {
+    name:   "displayMath4 two in one line",
+    input:  "\\begin{eqnarray} x \\end{eqnarray} abc \\begin{eqnarray} y \\end{eqnarray}",
+    output: '<p><div class="math">x</div> abc <div class="math">y</div></p>'
+  },
+  {
+    name:   "dollar sign and math",
+    input:  "$1.23",
+    output: '<p>$1.23</p>'
+  },
+  /*
+  {
+    name:   "latex_escape",
+    input:  "\\begin{eqnarray} \\x \\ \\end{eqnarray} abc \\ \\begin{eqnarray} \\ \\y \\end{eqnarray}",
+    output: '<p><div class="math">\\x \\</div> abc \\ <div class="math">\\ \\y</div></p>'
+  },
+  */
   { // Test //emphasis//
     name:   "Emphasis",
     input:  "//Emphasis//",
