@@ -25,7 +25,7 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-if (!Parse) { var Parse = {}; }
+var Parse = {};
 if (!Parse.Simple) { Parse.Simple = {}; }
 
 Parse.Simple.Base = function(grammar, options) {
@@ -61,7 +61,11 @@ Parse.Simple.Base.prototype.constructor = Parse.Simple.Base;
 Parse.Simple.Base.Rule = function(params) {
     if (!arguments.length) { return; }
 
-    for (var p in params) { this[p] = params[p]; }
+    for (var p in params) {
+        if (params.hasOwnProperty(p)) {
+            this[p] = params[p];
+        }
+    }
     if (!this.children) { this.children = []; }
 };
 
@@ -102,8 +106,10 @@ Parse.Simple.Base.Rule.prototype = {
 
         if (this.attrs) {
             for (var i in this.attrs) {
-                target.setAttribute(i, this.attrs[i]);
-                if (options.forIE && i == 'class') { target.className = this.attrs[i]; }
+                if (this.attrs.hasOwnProperty(i)) {
+                    target.setAttribute(i, this.attrs[i]);
+                    if (options.forIE && i == 'class') { target.className = this.attrs[i]; }
+                }
             }
         }
         return this;
@@ -121,7 +127,7 @@ Parse.Simple.Base.Rule.prototype = {
             var best = false;
             var rule  = false;
             for (var i = 0; i < this.children.length; i++) {
-                if (typeof matches[i] == 'undefined') {
+                if (typeof matches[i] === 'undefined') {
                     if (!this.children[i].match) {
                         this.children[i] = new this.constructor(this.children[i]);
                     }
@@ -130,7 +136,7 @@ Parse.Simple.Base.Rule.prototype = {
                 if (matches[i] && (!best || best.index > matches[i].index)) {
                     best = matches[i];
                     rule = this.children[i];
-                    if (best.index == 0) { break; }
+                    if (best.index === 0) { break; }
                 }
             }
 
@@ -146,13 +152,13 @@ Parse.Simple.Base.Rule.prototype = {
 
             var chopped = best.index + best[0].length;
             tail = tail.substring(chopped);
-            for (var i = 0; i < this.children.length; i++) {
+            for (i = 0; i < this.children.length; i++) {
                 if (matches[i]) {
                     if (matches[i].index >= chopped) {
                         matches[i].index -= chopped;
                     }
                     else {
-                        matches[i] = void 0;
+                        matches[i] = undefined;
                     }
                 }
             }
@@ -202,7 +208,7 @@ Parse.Simple.Creole = function(options) {
         hr: { tag: 'hr', regex: /(^|\n)\s*----\s*(\n|$)/ },
 
         mdash: { regex: / -- /,
-            build: function(node){ node.appendChild(document.createTextNode(" — ")) } },
+            build: function(node){ node.appendChild(document.createTextNode(" \u2014 ")); } },
 
         br: { tag: 'br', regex: /\\\\/ },
 
@@ -244,6 +250,7 @@ Parse.Simple.Creole = function(options) {
         // inlineMath1: { tag: 'span', capture: 1, attrs: { 'class': 'math' },
         //    regex: '\\$[ \t]*([^\\$]*[^\\$ \t])[ \t]*\\$'},
         // \(y\)
+        // FIXME: bad escapement
         inlineMath2: { tag: 'span', capture: 1, attrs: { 'class': 'math' },
             regex: '\\\\\\\([ \t]*(.*?[^ \t])[ \t]*\\\\\\\)'},
         // $$z$$ 
@@ -290,9 +297,9 @@ Parse.Simple.Creole = function(options) {
             build: function(node, r, options) {
                 var link = document.createElement('a');
 
-                link.href = options && options.linkFormat
-                    ? formatLink(r[1].replace(/~(.)/g, '$1'), options.linkFormat)
-                    : r[1].replace(/~(.)/g, '$1');
+                link.href = options && options.linkFormat ?
+                    formatLink(r[1].replace(/~(.)/g, '$1'), options.linkFormat) :
+                    r[1].replace(/~(.)/g, '$1');
                 this.apply(link, r[2], options);
 
                 node.appendChild(link);
@@ -388,7 +395,7 @@ Parse.Simple.Creole = function(options) {
             // g.displayMath1,
             g.displayMath2,
             g.displayMath3,
-            g.displayMath4,
+            g.displayMath4
     ].concat(leaf_grammars_without_math);
 
     g.h1.children = g.h2.children = g.h3.children =
