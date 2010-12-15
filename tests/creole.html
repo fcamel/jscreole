@@ -742,6 +742,16 @@ var tests = [
     output: "<p><img alt=\"|Alternative text\" src=\"image.png~\"/></p>"
   },
   {
+    name:   "Image with px width",
+    input:  "{{image.png|alt text|width=900px}}",
+    output: '<p><img style="width: 900px; " alt="alt text" src="image.png"/></p>'
+  },
+  {
+    name:   "Image with percentage width",
+    input:  "{{image.png|alt text|width=80%}}",
+    output: '<p><img style="width: 80%; " alt="alt text" src="image.png"/></p>'
+  },
+  {
     name:   "Tables with escaped separator",
     input:  "| A | B |\n| C | D ~| E |",
     output: "<table><tr><td> A </td><td> B </td></tr>" +
