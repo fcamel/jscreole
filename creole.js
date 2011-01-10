@@ -311,6 +311,9 @@ Parse.Simple.Creole = function(options) {
                 var img = document.createElement('img');
                 img.src = r[1];
                 img.alt = r[2].replace(/~(.)/g, '$1');
+                /* Creole extension, I don't know what mechanism is in
+                 * Creole 1.0 to specify title text */
+                img.title = img.alt;
                 /* r: ["{{a|b fdsa ds~||width=100px}}",
                  *     "a", "b fdsa ds~|", "~|", "~|", "width", "100px"] */
                 if (r[5] !== undefined && r[6] !== undefined) {
